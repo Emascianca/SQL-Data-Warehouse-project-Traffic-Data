@@ -1,0 +1,17 @@
+WITH
+MEMBER [Measures].[crash_avg_dmg] AS
+    AVG(
+    ([Fact Table].[Crash PK].CURRENTMEMBER, [Fact Table].[Fact Id].[Fact Id]),
+    [Measures].[Damage])
+
+MEMBER year_avg_dmg AS
+	AVG(
+	([date_dim].[Year].CURRENTMEMBER, [Fact Table].[Crash PK].[Crash PK]),
+	   [Measures].[crash_avg_dmg])
+
+SELECT 
+    year_avg_dmg ON COLUMNS,
+	[date_dim].[Year].[Year] ON ROWS
+FROM [2024 Group ID 9]
+
+

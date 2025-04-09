@@ -1,0 +1,5 @@
+WITH MEMBER grand_total AS
+SUM([date_dim].[DayMonthQuarterYear].[Month].MEMBERS, [Measures].[Damage])
+SELECT {[Measures].[Damage], grand_total} ON COLUMNS,
+NONEMPTY(([Geography Dim].[Beat Of Occurrence].[Beat Of Occurrence], [date_dim].[DayMonthQuarterYear].[Month])) ON ROWS
+FROM [2024 Group ID 9]

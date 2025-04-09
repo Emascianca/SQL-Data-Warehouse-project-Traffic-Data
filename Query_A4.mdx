@@ -1,0 +1,21 @@
+WITH
+MEMBER [Measures].[Previous Year Damage] AS
+	(
+        [date_dim].[DayMonthQuarterYear].CurrentMember.PrevMember,
+        [Measures].[Damage]
+    )
+
+MEMBER [Measures].[Damage % Change] AS
+    IIF(
+        NOT ISEMPTY([Measures].[Previous Year Damage]) AND [Measures].[Previous Year Damage] > 0,
+        ROUND(([Measures].[Damage] - [Measures].[Previous Year Damage]) / [Measures].[Previous Year Damage] * 100, 2),
+        NULL
+    )
+
+SELECT 
+    {[Measures].[Damage], [Measures].[Previous Year Damage], [Measures].[Damage % Change]} ON COLUMNS,
+    NONEMPTY((
+        [Geography Dim].[Beat Of Occurrence].[Beat Of Occurrence], 
+        [date_dim].[DayMonthQuarterYear].[Year]
+    )) ON ROWS
+FROM [2024 Group ID 9]

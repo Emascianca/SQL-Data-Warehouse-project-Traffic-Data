@@ -1,0 +1,27 @@
+--For each vehicle type and each year, show the name and the (total) damage costs of the person with the highest reported damage.
+
+WITH 
+MEMBER [Measures].[Max Damage Person] AS
+    TOPCOUNT(
+        NONEMPTY(
+            ([person_dim].[Person Id].[Person Id].MEMBERS), 
+            [Measures].[Damage]
+        ), 
+        1, 
+        [Measures].[Damage]
+    ).Item(0).Member_Key
+
+MEMBER [Measures].[Max Damage] AS
+    MAX(
+        NONEMPTY(
+            ([person_dim].[Person Id].[Person Id].MEMBERS), 
+            [Measures].[Damage]
+        ),
+        [Measures].[Damage]
+    )
+
+SELECT 
+    {[Measures].[Max Damage Person], [Measures].[Max Damage]} ON COLUMNS,
+    ([vehicle_dim].[Vehicle Type].[Vehicle Type].MEMBERS, 
+     [date_dim].[Year].[Year].MEMBERS) ON ROWS
+FROM [2024 Group ID 9]
